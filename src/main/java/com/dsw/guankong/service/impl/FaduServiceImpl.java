@@ -30,7 +30,6 @@ public class FaduServiceImpl implements FaduService {
     @Autowired(required=false)
     private TpBaqryUserDoMapperExt tpBaqryUserDoMapperExt;
 
-
     @Override
     public ActionResult queryBiluListByRyIdcard() throws Exception {
         ActionResult actionResult = new ActionResult();
