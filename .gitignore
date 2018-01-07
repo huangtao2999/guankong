@@ -4,6 +4,7 @@ target/
 .svn/
 mvnw
 mvnw.cmd
+git
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
