@@ -9,7 +9,7 @@
         SELECT user_id from tp_xxwsgl t1,tp_xxwsgl_record t2
         WHERE t1.id = t2.xxwsgl_id
         AND t1.room_type='询问室'
-        AND t1.room_no=#{roomNo,jdbcType=VARCHAR})
+        AND t1.room_name=#{roomName,jdbcType=VARCHAR})
         AND person_status = '在所'
     </select>
 </mapper>

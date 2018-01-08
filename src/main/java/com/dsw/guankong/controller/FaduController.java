@@ -36,17 +36,13 @@ public class FaduController {
 
     /**
      * 获取笔录内容pdf
-     * @param braceletNumber
+     * @param roomName
      * @return
      */
     @RequestMapping("/getBlContentToPdf")
-    public List<BlContentVo> getBlContentToPdf(String braceletNumber) throws Exception {
+    public List<BlContentVo> getBlContentToPdf(String roomName) throws Exception {
         List<BlContentVo> list = null;
-//        try {
-           list=  faduService.getBlContentToPdfPath(braceletNumber);
-//        } catch (Exception e) {
-//            logger.error("FaduController.getBlContentToPdf()调用异常",e);
-//        }
+        list=  faduService.getBlContentToPdfPath(roomName);
         return list;
     }
 

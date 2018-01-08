@@ -177,10 +177,10 @@ public class FaduServiceImpl implements FaduService {
     }
 
     @Override
-    public List<BlContentVo> getBlContentToPdfPath(String braceletNumber) throws Exception {
-        TpBaqryUserDo tpBaqryUserDo = tpBaqryUserDoMapperExt.selectNowUserByRoomNo(braceletNumber);
+    public List<BlContentVo> getBlContentToPdfPath(String roomName) throws Exception {
+        TpBaqryUserDo tpBaqryUserDo = tpBaqryUserDoMapperExt.selectNowUserByRoomNo(roomName);
         if(null ==tpBaqryUserDo){
-            throw  new BizException(MessageFormat.format("请确认询问室{0}中有在所人员!",braceletNumber));
+            throw  new BizException(MessageFormat.format("请确认{0}中有在所人员!",roomName));
         }
         List<BlContentVo> blContentVos = getBlPdf(String.valueOf(tpBaqryUserDo.getId()));
         return blContentVos;

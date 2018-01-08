@@ -15,12 +15,12 @@ public interface FaduService {
     public List<String> getSigntureFileContent(String blid)throws Exception;
 
     /**
-     * 根据手环编号+在所状态获取笔录PDF 文件地址
-     * @param bracelet_number
+     * 根据房间名称+在所状态获取笔录PDF 文件地址
+     * @param roomName
      * @return
      * @throws Exception
      */
-    public List<BlContentVo> getBlContentToPdfPath(String bracelet_number) throws Exception;
+    public List<BlContentVo> getBlContentToPdfPath(String roomName) throws Exception;
 
     /**
      * 根据警情编号获取笔录PDF 文件地址
