@@ -12,6 +12,7 @@
         <property name="suppressAllComments" value="true"/>
         <property name="useActualColumnNames" value="false"/>
         <!-- 配置数据库连接 -->
+        <plugin type="com.dsw.guankong.util.DswGeneratePlugin"/>
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/test?characterEncoding=UTF-8"
                         userId="root" password="root"/>
@@ -39,12 +40,18 @@
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
 
-        <table tableName="TP_BAQRY_USER" domainObjectName="TpBaqryUserDo">
+        <!--<table tableName="TP_BAQRY_USER" domainObjectName="TpBaqryUserDo">-->
+        <!--<columnOverride column="id" property="id"-->
+        <!--javaType="Long" jdbcType="INTEGER">-->
+        <!--</columnOverride>-->
+        <!--<columnOverride column="in_time" property="inTime"-->
+        <!--javaType="java.util.Date" jdbcType="VARCHAR">-->
+        <!--</columnOverride>-->
+        <!--</table>-->
+
+        <table tableName="TP_USER" domainObjectName="TpUserDo">
             <columnOverride column="id" property="id"
                             javaType="Long" jdbcType="INTEGER">
-            </columnOverride>
-            <columnOverride column="in_time" property="inTime"
-                            javaType="java.util.Date" jdbcType="VARCHAR">
             </columnOverride>
         </table>
 
