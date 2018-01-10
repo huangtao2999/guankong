@@ -61,8 +61,4 @@ public class DswGeneratePlugin extends PluginAdapter {
 
         return super.sqlMapDocumentGenerated(document, introspectedTable);
     }
-
-    public static void main(String[] args) {
-
-    }
 }

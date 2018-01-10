@@ -116,7 +116,7 @@ public class FaduServiceImpl implements FaduService {
                 name = jsonObject2.getString("fileName");
                 if(null !=content){
                     byte []bytes = FuncComm.base64ToByte(content);
-                    String fileName = MD5Util.MD5(name)+"."+"pdf";
+                    String fileName = MD5Util.MD5(content)+"."+"pdf";
                     String fileAddress =  fileUpload.saveRemote(bytes,fileName);
                     list.add(fileAddress);
                 }
@@ -159,8 +159,8 @@ public class FaduServiceImpl implements FaduService {
                     String blid = blObj.getString("id");
                     String bldxxm = blObj.getString("bldxxm");
                     BlContentVo blContentVo = new BlContentVo();
-                    blContentVo.setKssj(DateUtil.formatFull(kssj));
-                    blContentVo.setJssj(DateUtil.formatFull(jssj));
+                    blContentVo.setKssj(DateUtil.formatFull(kssj,DateStyle.FORMAT_1));
+                    blContentVo.setJssj(DateUtil.formatFull(jssj,DateStyle.FORMAT_1));
                     blContentVo.setBldxxm(bldxxm);
                     String pdfFile =blObj.getString("pdf_file");
                     if ("1".equals(pdfFile)){
@@ -171,6 +171,8 @@ public class FaduServiceImpl implements FaduService {
                     }
                     blContentVos.add(blContentVo);
                 }
+            }else{
+                throw new BizException("法度接口访问失败!");
             }
         }
         return blContentVos;
@@ -183,7 +185,23 @@ public class FaduServiceImpl implements FaduService {
             throw  new BizException(MessageFormat.format("请确认{0}中有在所人员!",roomName));
         }
         List<BlContentVo> blContentVos = getBlPdf(String.valueOf(tpBaqryUserDo.getId()));
-        return blContentVos;
+        Collections.sort(blContentVos, new Comparator<BlContentVo>() {
+            @Override
+            public int compare(BlContentVo o1, BlContentVo o2) {
+                if(DateUtil.formatTime(o1.getKssj(),DateStyle.FORMAT_FULL) < DateUtil.formatTime(o2.getKssj(),DateStyle.FORMAT_FULL)){
+                    return  1;
+                }else if(DateUtil.formatTime(o1.getKssj(),DateStyle.FORMAT_FULL) > DateUtil.formatTime(o2.getKssj(),DateStyle.FORMAT_FULL)){
+                    return -1;
+                }else{
+                    return 0;
+                }
+            }
+        });
+        List<BlContentVo> resultList = new ArrayList();
+        if(null !=blContentVos && blContentVos.size() >0){
+            resultList.add(blContentVos.get(0));
+        }
+        return resultList;
     }
 
     @Override
