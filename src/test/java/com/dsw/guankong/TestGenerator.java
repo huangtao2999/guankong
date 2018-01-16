@@ -28,7 +28,7 @@ public class TestGenerator {
     }
 
     @Test
-    public void test() throws Exception{
+    public void test() throws Exception {
         List<String> warnings = new ArrayList<String>();
         boolean overwrite = true;
         ConfigurationParser cp = new ConfigurationParser(warnings);

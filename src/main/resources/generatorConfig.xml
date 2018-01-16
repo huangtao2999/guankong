@@ -35,7 +35,7 @@
         </sqlMapGenerator>
         <!-- Mapper.java位置 -->
         <javaClientGenerator type="XMLMAPPER"
-                             targetPackage="com.dsw.guankong.dal.base"
+                             targetPackage="com.dsw.guankong.dal"
                              targetProject="src/main/java">
             <property name="enableSubPackages" value="true"/>
         </javaClientGenerator>
