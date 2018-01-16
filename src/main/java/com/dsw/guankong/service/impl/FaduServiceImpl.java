@@ -27,7 +27,7 @@ public class FaduServiceImpl implements FaduService {
     private String FADU_URL;
     @Autowired
     private FileUpload fileUpload;
-    @Autowired(required=false)
+    @Autowired(required = false)
     private TpBaqryUserDoMapperExt tpBaqryUserDoMapperExt;
 
     @Override
@@ -44,19 +44,19 @@ public class FaduServiceImpl implements FaduService {
         data.put("end", "10");
         //对查询条件aes加密
         AESTool aes = new AESTool();
-        String  d = aes.encrypt(JSON.toJSONString(data), FaduConfig.appSecret);
+        String d = aes.encrypt(JSON.toJSONString(data), FaduConfig.appSecret);
         params.put("data", d);
-        String bgSig = MD5Util.MD5(FaduConfig.appKey+FaduConfig.appSecret+d);
+        String bgSig = MD5Util.MD5(FaduConfig.appKey + FaduConfig.appSecret + d);
         params.put("bdSig", bgSig);
         //通过http请求发送查询条件，返回查询结果
-        String json = HttpClientUtil.post(FADU_URL+FaduConfig.method_queryBiluListByRyIdcard, params);
+        String json = HttpClientUtil.post(FADU_URL + FaduConfig.method_queryBiluListByRyIdcard, params);
         System.out.println(json);
         actionResult.setContent(json);
         return actionResult;
     }
 
     @Override
-    public BlContentVo queryBiluByBiluID(String blId,String isOuterId) throws Exception {
+    public BlContentVo queryBiluByBiluID(String blId, String isOuterId) throws Exception {
         BlContentVo blContentVo = new BlContentVo();
         //接口安全接入 秘钥
         Map<String, String> params = new HashMap<String, String>();
@@ -68,14 +68,14 @@ public class FaduServiceImpl implements FaduService {
         data.put("isOuterId", isOuterId);
         //对查询条件aes加密
         AESTool aes = new AESTool();
-        String  d = aes.encrypt(JSON.toJSONString(data), FaduConfig.appSecret);
+        String d = aes.encrypt(JSON.toJSONString(data), FaduConfig.appSecret);
         params.put("data", d);
-        String bgSig = MD5Util.MD5(FaduConfig.appKey+FaduConfig.appSecret+d);
+        String bgSig = MD5Util.MD5(FaduConfig.appKey + FaduConfig.appSecret + d);
         params.put("bdSig", bgSig);
         //通过http请求发送查询条件，返回查询结果
-        String html = HttpClientUtil.post(FADU_URL+FaduConfig.method_queryBiluByBiluID, params);
+        String html = HttpClientUtil.post(FADU_URL + FaduConfig.method_queryBiluByBiluID, params);
         JSONObject jsonObject = JSONObject.parseObject(html);
-        if(null !=jsonObject && jsonObject.getIntValue("resultCode") == 0){
+        if (null != jsonObject && jsonObject.getIntValue("resultCode") == 0) {
             JSONObject jsonData = jsonObject.getJSONObject("data");
             String kssj = jsonData.getString("KSSJ");
             String jssj = jsonData.getString("JSSJ");
@@ -99,25 +99,25 @@ public class FaduServiceImpl implements FaduService {
         data.put("blid", blid);
         //对查询条件aes加密
         AESTool aes = new AESTool();
-        String  d = aes.encrypt(JSON.toJSONString(data), FaduConfig.appSecret);
+        String d = aes.encrypt(JSON.toJSONString(data), FaduConfig.appSecret);
         params.put("data", d);
-        String bgSig = MD5Util.MD5(FaduConfig.appKey+FaduConfig.appSecret+d);
+        String bgSig = MD5Util.MD5(FaduConfig.appKey + FaduConfig.appSecret + d);
         params.put("bdSig", bgSig);
         //通过http请求发送查询条件，返回查询结果
-        String json = HttpClientUtil.post(FADU_URL+FaduConfig.method_getLatestSigntureFileContent, params);
+        String json = HttpClientUtil.post(FADU_URL + FaduConfig.method_getLatestSigntureFileContent, params);
         JSONObject jsonObject = JSONObject.parseObject(json);
-        if(null !=jsonObject && 1==jsonObject.getIntValue("resultCode")){
+        if (null != jsonObject && 1 == jsonObject.getIntValue("resultCode")) {
             JSONArray jsonArray = jsonObject.getJSONArray("results");
-            String content=null;
-            String name=null;
-            for(int i=0; i<jsonArray.size();i++){
+            String content = null;
+            String name = null;
+            for (int i = 0; i < jsonArray.size(); i++) {
                 JSONObject jsonObject2 = jsonArray.getJSONObject(i);
                 content = jsonObject2.getString("content");
                 name = jsonObject2.getString("fileName");
-                if(null !=content){
-                    byte []bytes = FuncComm.base64ToByte(content);
-                    String fileName = MD5Util.MD5(content)+"."+"pdf";
-                    String fileAddress =  fileUpload.saveRemote(bytes,fileName);
+                if (null != content) {
+                    byte[] bytes = FuncComm.base64ToByte(content);
+                    String fileName = MD5Util.MD5(content) + "." + "pdf";
+                    String fileAddress = fileUpload.saveRemote(bytes, fileName);
                     list.add(fileAddress);
                 }
             }
@@ -127,51 +127,45 @@ public class FaduServiceImpl implements FaduService {
 
     /**
      * 通过人员登记ID 获取笔内容
-     * @param baqryId
-     * @return
      */
-    private  List<BlContentVo> getBlPdf(String baqryId) throws Exception {
+    private List<BlContentVo> getBlPdf(String baqryId) throws Exception {
         List<BlContentVo> blContentVos = new ArrayList<>();
         //通过身份证号和入办案区时间获取当前的一条笔录
         Map<String, String> params = new HashMap<String, String>();
         params.put("apiKey", FaduConfig.appKey);
         Map<String, Object> data = new HashMap<String, Object>();
-        data.put("ajid", "");
-        data.put("ajbh", baqryId);
-        data.put("start", "1");
-        data.put("end", "10");
+        data.put("blid", baqryId);
+        data.put("wtsj", "0");
+        data.put("isOuterId", 1);
         //对查询条件aes加密
         AESTool aes = new AESTool();
         String dataSecret = aes.encrypt(JSON.toJSONString(data), FaduConfig.appSecret);
         params.put("data", dataSecret);
-        String bgSig = MD5Util.MD5(FaduConfig.appKey+FaduConfig.appSecret+dataSecret);
+        String bgSig = MD5Util.MD5(FaduConfig.appKey + FaduConfig.appSecret + dataSecret);
         params.put("bdSig", bgSig);
         //通过http请求发送查询条件，返回查询结果
-        String blHtml = HttpClientUtil.post(FADU_URL+FaduConfig.method_queryBiluListByAjid, params);
-        if(null !=blHtml){
+        String blHtml = HttpClientUtil.post(FADU_URL + FaduConfig.method_queryBiluByBiluID, params);
+        if (null != blHtml) {
             JSONObject jsonObject = JSONObject.parseObject(blHtml);
-            if(0 == jsonObject.getIntValue("resultCode")){
-                JSONArray blArray = jsonObject.getJSONArray("data");
-                for(int i=0;i<blArray.size();i++){
-                    JSONObject blObj = (JSONObject) blArray.get(i);
-                    String kssj = blObj.getString("kssj");
-                    String jssj = blObj.getString("jssj");
-                    String blid = blObj.getString("id");
-                    String bldxxm = blObj.getString("bldxxm");
-                    BlContentVo blContentVo = new BlContentVo();
-                    blContentVo.setKssj(DateUtil.formatFull(kssj,DateStyle.FORMAT_1));
-                    blContentVo.setJssj(DateUtil.formatFull(jssj,DateStyle.FORMAT_1));
-                    blContentVo.setBldxxm(bldxxm);
-                    String pdfFile =blObj.getString("pdf_file");
-                    if ("1".equals(pdfFile)){
-                        List<String> filePaths = getSigntureFileContent(blid);
-                        blContentVo.setFilePath(filePaths);
-                    }else{
-                        logger.warn(blid+":该笔录没有PDF文书!");
-                    }
-                    blContentVos.add(blContentVo);
+            if (0 == jsonObject.getIntValue("resultCode")) {
+                JSONObject blObj = jsonObject.getJSONObject("data");
+                String kssj = blObj.getString("kssj");
+                String jssj = blObj.getString("jssj");
+                String blid = blObj.getString("id");
+                String bldxxm = blObj.getString("bldxxm");
+                BlContentVo blContentVo = new BlContentVo();
+                blContentVo.setKssj(DateUtil.formatFull(kssj, DateStyle.FORMAT_1));
+                blContentVo.setJssj(DateUtil.formatFull(jssj, DateStyle.FORMAT_1));
+                blContentVo.setBldxxm(bldxxm);
+                String pdfFile = blObj.getString("pdf_file");
+                if ("1".equals(pdfFile)) {
+                    List<String> filePaths = getSigntureFileContent(blid);
+                    blContentVo.setFilePath(filePaths);
+                } else {
+                    logger.warn(blid + ":该笔录没有PDF文书!");
                 }
-            }else{
+                blContentVos.add(blContentVo);
+            } else {
                 throw new BizException("法度接口访问失败!");
             }
         }
@@ -181,24 +175,24 @@ public class FaduServiceImpl implements FaduService {
     @Override
     public List<BlContentVo> getBlContentToPdfPath(String roomName) throws Exception {
         TpBaqryUserDo tpBaqryUserDo = tpBaqryUserDoMapperExt.selectNowUserByRoomNo(roomName);
-        if(null ==tpBaqryUserDo){
-            throw  new BizException(MessageFormat.format("请确认{0}中有在所人员!",roomName));
+        if (null == tpBaqryUserDo) {
+            throw new BizException(MessageFormat.format("请确认{0}中有在所人员!", roomName));
         }
         List<BlContentVo> blContentVos = getBlPdf(String.valueOf(tpBaqryUserDo.getId()));
         Collections.sort(blContentVos, new Comparator<BlContentVo>() {
             @Override
             public int compare(BlContentVo o1, BlContentVo o2) {
-                if(DateUtil.formatTime(o1.getKssj(),DateStyle.FORMAT_FULL) < DateUtil.formatTime(o2.getKssj(),DateStyle.FORMAT_FULL)){
-                    return  1;
-                }else if(DateUtil.formatTime(o1.getKssj(),DateStyle.FORMAT_FULL) > DateUtil.formatTime(o2.getKssj(),DateStyle.FORMAT_FULL)){
+                if (DateUtil.formatTime(o1.getKssj(), DateStyle.FORMAT_FULL) < DateUtil.formatTime(o2.getKssj(), DateStyle.FORMAT_FULL)) {
+                    return 1;
+                } else if (DateUtil.formatTime(o1.getKssj(), DateStyle.FORMAT_FULL) > DateUtil.formatTime(o2.getKssj(), DateStyle.FORMAT_FULL)) {
                     return -1;
-                }else{
+                } else {
                     return 0;
                 }
             }
         });
         List<BlContentVo> resultList = new ArrayList();
-        if(null !=blContentVos && blContentVos.size() >0){
+        if (null != blContentVos && blContentVos.size() > 0) {
             resultList.add(blContentVos.get(0));
         }
         return resultList;
@@ -211,13 +205,13 @@ public class FaduServiceImpl implements FaduService {
         example.createCriteria().andAlertNumberEqualTo(alertNumber);
         List<TpBaqryUserDo> list = tpBaqryUserDoMapperExt.selectByExample(example);
         //同一个警情编号，对应多个嫌疑人
-        for(TpBaqryUserDo tpBaqryUserDo:list){
-            List<BlContentVo> blContentVos =  getBlPdf(String.valueOf(tpBaqryUserDo.getId()));
-            List<String>imagePaths = null;
-            for(BlContentVo blContentVo:blContentVos){
+        for (TpBaqryUserDo tpBaqryUserDo : list) {
+            List<BlContentVo> blContentVos = getBlPdf(String.valueOf(tpBaqryUserDo.getId()));
+            List<String> imagePaths = null;
+            for (BlContentVo blContentVo : blContentVos) {
                 List<String> filePaths = blContentVo.getFilePath();
                 imagePaths = new ArrayList<>();
-                for(String filePath:filePaths){
+                for (String filePath : filePaths) {
                     imagePaths.addAll(fileUpload.pdfToImage(filePath));
                 }
                 blContentVo.setFilePath(imagePaths);
