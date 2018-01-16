@@ -136,7 +136,7 @@ public class FaduServiceImpl implements FaduService {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("blid", baqryId);
         data.put("wtsj", "0");
-        data.put("isOuterId", 1);
+        data.put("isOuterId", "1");
         //对查询条件aes加密
         AESTool aes = new AESTool();
         String dataSecret = aes.encrypt(JSON.toJSONString(data), FaduConfig.appSecret);
@@ -149,8 +149,8 @@ public class FaduServiceImpl implements FaduService {
             JSONObject jsonObject = JSONObject.parseObject(blHtml);
             if (0 == jsonObject.getIntValue("resultCode")) {
                 JSONObject blObj = jsonObject.getJSONObject("data");
-                String kssj = blObj.getString("kssj");
-                String jssj = blObj.getString("jssj");
+                String kssj = blObj.getString("KSSJ");
+                String jssj = blObj.getString("JSSJ");
                 String blid = blObj.getString("id");
                 String bldxxm = blObj.getString("bldxxm");
                 BlContentVo blContentVo = new BlContentVo();
