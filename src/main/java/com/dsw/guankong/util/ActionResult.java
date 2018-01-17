@@ -8,7 +8,7 @@ import lombok.Data;
  * 操作返回结果
  */
 @Data
-public class ActionResult<T> extends BaseVo implements Serializable {
+public class ActionResult<T> extends BaseModel implements Serializable {
 
     /**
      * 返回值
@@ -30,10 +30,7 @@ public class ActionResult<T> extends BaseVo implements Serializable {
     private String errorMsg;
 
     /**
-     * info —300 提醒信息
-     * warn —200 警告信息
-     * error —100 业务错误信息
-     * fault —0 系统级别错误信息
+     * info —300 提醒信息 warn —200 警告信息 error —100 业务错误信息 fault —0 系统级别错误信息
      */
     private Integer errorLevel;
 

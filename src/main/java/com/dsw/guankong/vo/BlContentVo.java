@@ -2,7 +2,8 @@ package com.dsw.guankong.vo;
 
 import java.util.List;
 
-import com.dsw.guankong.util.BaseVo;
+import com.dsw.guankong.util.BaseModel;
+
 import lombok.Data;
 
 /**
@@ -10,7 +11,7 @@ import lombok.Data;
  */
 
 @Data
-public class BlContentVo extends BaseVo {
+public class BlContentVo extends BaseModel {
 
     private String kssj;
 

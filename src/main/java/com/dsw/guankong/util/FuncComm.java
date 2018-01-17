@@ -27,6 +27,16 @@ public class FuncComm {
         return false;
     }
 
+    public static boolean isEmpty(String str) {
+        if (null == str) {
+            return true;
+        }
+        if (str.trim().length() == 0) {
+            return true;
+        }
+        return false;
+    }
+
     public static String getBase64(String str) {
         byte[] b = null;
         String s = null;
