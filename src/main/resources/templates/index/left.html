@@ -10,8 +10,10 @@
 <div class="sidebar-nav">
     <a th:each="menu,iterStat:${menus}" th:href="${menu.action}"
        target="mainFrame"
-       onClick="tuleft('${iterStat.index}');" id="lefttu${iterStat.index}"><i
-            class="fa icon-nav${iterStat.index}" th:text="${menu.menuname}"></i></a>
+       th:onclick="|tuleft(${iterStat.index});|"
+       th:id="|lefttu${iterStat.index}|">
+        <i th:class="|fa icon-nav${iterStat.index}|"
+           th:text="${menu.menuname}"></i></a>
 
 </div>
 <script>
