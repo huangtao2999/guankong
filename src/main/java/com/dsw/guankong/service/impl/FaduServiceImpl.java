@@ -5,8 +5,11 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dsw.guankong.constant.FaduConfig;
 import com.dsw.guankong.dal.TpBaqryUserDoMapperExt;
+import com.dsw.guankong.dal.TpBlrecordDoMapperExt;
 import com.dsw.guankong.model.TpBaqryUserDo;
 import com.dsw.guankong.model.TpBaqryUserDoExample;
+import com.dsw.guankong.model.TpBlrecordDo;
+import com.dsw.guankong.model.TpBlrecordDoExample;
 import com.dsw.guankong.service.FaduService;
 import com.dsw.guankong.util.*;
 import com.dsw.guankong.vo.BlContentVo;
@@ -29,6 +32,8 @@ public class FaduServiceImpl implements FaduService {
     private FileUpload fileUpload;
     @Autowired(required = false)
     private TpBaqryUserDoMapperExt tpBaqryUserDoMapperExt;
+    @Autowired(required = false)
+    private TpBlrecordDoMapperExt tpBlrecordDoMapperExt;
 
     @Override
     public ActionResult queryBiluListByRyIdcard() throws Exception {
@@ -174,11 +179,11 @@ public class FaduServiceImpl implements FaduService {
 
     @Override
     public List<BlContentVo> getBlContentToPdfPath(String roomName) throws Exception {
-        TpBaqryUserDo tpBaqryUserDo = tpBaqryUserDoMapperExt.selectNowUserByRoomNo(roomName);
-        if (null == tpBaqryUserDo) {
+        TpBlrecordDo tpBlrecordDo = findBlrecord(null, roomName);
+        if (null == tpBlrecordDo) {
             throw new BizException(MessageFormat.format("请确认{0}中有在所人员!", roomName));
         }
-        List<BlContentVo> blContentVos = getBlPdf(String.valueOf(tpBaqryUserDo.getId()));
+        List<BlContentVo> blContentVos = getBlPdf(String.valueOf(tpBlrecordDo.getId()));
         Collections.sort(blContentVos, new Comparator<BlContentVo>() {
             @Override
             public int compare(BlContentVo o1, BlContentVo o2) {
@@ -206,7 +211,11 @@ public class FaduServiceImpl implements FaduService {
         List<TpBaqryUserDo> list = tpBaqryUserDoMapperExt.selectByExample(example);
         //同一个警情编号，对应多个嫌疑人
         for (TpBaqryUserDo tpBaqryUserDo : list) {
-            List<BlContentVo> blContentVos = getBlPdf(String.valueOf(tpBaqryUserDo.getId()));
+            TpBlrecordDo tpBlrecordDo = findBlrecord(tpBaqryUserDo.getId(), null);
+            if (null == tpBlrecordDo) {
+                throw new BizException(MessageFormat.format("请确认{0}有笔录记录!", tpBaqryUserDo.getId()));
+            }
+            List<BlContentVo> blContentVos = getBlPdf(String.valueOf(tpBlrecordDo.getId()));
             List<String> imagePaths = null;
             for (BlContentVo blContentVo : blContentVos) {
                 List<String> filePaths = blContentVo.getFilePath();
@@ -219,5 +228,25 @@ public class FaduServiceImpl implements FaduService {
             blContentVosAll.addAll(blContentVos);
         }
         return blContentVosAll;
+    }
+
+    private TpBlrecordDo findBlrecord(Long userId, String roomName) throws BizException {
+        TpBlrecordDoExample example = new TpBlrecordDoExample();
+        if (null == userId && null == roomName) {
+            throw new BizException("缺少查询条件");
+        }
+        TpBlrecordDoExample.Criteria criteria = example.createCriteria();
+        if (null != userId) {
+            criteria.andRyIdEqualTo(userId);
+        }
+        if (null != roomName) {
+            criteria.andWhddEqualTo(roomName);
+        }
+        example.setOrderByClause(" gmt_create desc");
+        List<TpBlrecordDo> list = tpBlrecordDoMapperExt.selectByExample(example);
+        if (null != list && list.size() > 0) {
+            return list.get(0);
+        }
+        return null;
     }
 }

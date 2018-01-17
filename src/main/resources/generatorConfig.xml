@@ -12,7 +12,6 @@
         <property name="suppressAllComments" value="true"/>
         <property name="useActualColumnNames" value="false"/>
         <!-- 配置数据库连接 -->
-        <plugin type="com.dsw.guankong.util.DswGeneratePlugin"/>
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
                         connectionURL="jdbc:mysql://localhost:3306/test?characterEncoding=UTF-8"
                         userId="root" password="root"/>
@@ -49,9 +48,15 @@
         <!--</columnOverride>-->
         <!--</table>-->
 
-        <table tableName="TP_USER" domainObjectName="TpUserDo">
+        <table tableName="TP_BLRECORD" domainObjectName="TpBlrecordDo">
             <columnOverride column="id" property="id"
                             javaType="Long" jdbcType="INTEGER">
+            </columnOverride>
+            <columnOverride column="ry_id" property="ryId"
+                            javaType="Long" jdbcType="INTEGER">
+            </columnOverride>
+            <columnOverride column="gmt_create" property="gmtCreate"
+                            javaType="java.util.Date" jdbcType="TIMESTAMP">
             </columnOverride>
         </table>
 
