@@ -55,38 +55,44 @@
         <!--</columnOverride>-->
         <!--</table>-->
 
-        <table tableName="TP_MENU" domainObjectName="TpMenuDo">
-            <columnOverride column="id" property="id"
-                            javaType="Long" jdbcType="INTEGER">
-            </columnOverride>
-        </table>
+        <!--<table tableName="TP_MENU" domainObjectName="TpMenuDo">-->
+        <!--<columnOverride column="id" property="id"-->
+        <!--javaType="Long" jdbcType="INTEGER">-->
+        <!--</columnOverride>-->
+        <!--</table>-->
 
-        <table tableName="TP_ROLE" domainObjectName="TpRoleDo">
-            <columnOverride column="id" property="id"
-                            javaType="Long" jdbcType="INTEGER">
-            </columnOverride>
-        </table>
+        <!--<table tableName="TP_ROLE" domainObjectName="TpRoleDo">-->
+        <!--<columnOverride column="id" property="id"-->
+        <!--javaType="Long" jdbcType="INTEGER">-->
+        <!--</columnOverride>-->
+        <!--</table>-->
 
-        <table tableName="TP_ROLE_MENU" domainObjectName="TpRoleMenuDo">
+        <!--<table tableName="TP_ROLE_MENU" domainObjectName="TpRoleMenuDo">-->
+        <!--<columnOverride column="id" property="id"-->
+        <!--javaType="Long" jdbcType="INTEGER">-->
+        <!--</columnOverride>-->
+        <!--<columnOverride column="create_time" property="createTime"-->
+        <!--javaType="java.util.Date" jdbcType="TIMESTAMP">-->
+        <!--</columnOverride>-->
+        <!--<columnOverride column="update_time" property="updateTime"-->
+        <!--javaType="java.util.Date" jdbcType="TIMESTAMP">-->
+        <!--</columnOverride>-->
+        <!--</table>-->
+        <!--<table tableName="TP_USER_ROLE" domainObjectName="TpUserRoleDo">-->
+        <!--<columnOverride column="id" property="id"-->
+        <!--javaType="Long" jdbcType="INTEGER">-->
+        <!--</columnOverride>-->
+        <!--<columnOverride column="create_time" property="createTime"-->
+        <!--javaType="java.util.Date" jdbcType="TIMESTAMP">-->
+        <!--</columnOverride>-->
+        <!--<columnOverride column="update_time" property="updateTime"-->
+        <!--javaType="java.util.Date" jdbcType="TIMESTAMP">-->
+        <!--</columnOverride>-->
+        <!--</table>-->
+
+        <table tableName="TP_LOCKER" domainObjectName="TpLockerDo">
             <columnOverride column="id" property="id"
                             javaType="Long" jdbcType="INTEGER">
-            </columnOverride>
-            <columnOverride column="create_time" property="createTime"
-                            javaType="java.util.Date" jdbcType="TIMESTAMP">
-            </columnOverride>
-            <columnOverride column="update_time" property="updateTime"
-                            javaType="java.util.Date" jdbcType="TIMESTAMP">
-            </columnOverride>
-        </table>
-        <table tableName="TP_USER_ROLE" domainObjectName="TpUserRoleDo">
-            <columnOverride column="id" property="id"
-                            javaType="Long" jdbcType="INTEGER">
-            </columnOverride>
-            <columnOverride column="create_time" property="createTime"
-                            javaType="java.util.Date" jdbcType="TIMESTAMP">
-            </columnOverride>
-            <columnOverride column="update_time" property="updateTime"
-                            javaType="java.util.Date" jdbcType="TIMESTAMP">
             </columnOverride>
         </table>
 

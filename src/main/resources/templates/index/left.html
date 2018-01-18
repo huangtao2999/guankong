@@ -11,9 +11,11 @@
     <a th:each="menu,iterStat:${menus}" th:href="${menu.action}"
        target="mainFrame"
        th:onclick="|tuleft(${iterStat.index});|"
-       th:id="|lefttu${iterStat.index}|">
-        <i th:class="|fa icon-nav${iterStat.index}|"
-           th:text="${menu.menuname}"></i></a>
+       th:id="|lefttu${iterStat.index}|"
+    >
+        <i th:class="|fa icon-nav${iterStat.index}|"></i>
+        <span th:text="${menu.menuname}"></span>
+    </a>
 
 </div>
 <script>

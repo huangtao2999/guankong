@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title>储物柜管理</title>
+    <div th:include="inc/common"></div>
+</head>
+<!--主体开始-->
+<div class="content">
+    <ul class="breadcrumb">
+        <li class="active">储物柜管理</li>
+    </ul>
+
+    <div class="container-fluid">
+
+        <div class="btn-toolbar">
+    <span class="pull-right">
+    <a href="javascript:doAC('__URL__/delete','确定删除吗？')" class="btn btn-danger">删除</a>
+    </span>
+            <a href="__URL__/lockerUI.html" class="btn btn-success"><img
+                    th:src="@{../../images/icon/plus.png}"/> 新增</a> &nbsp;&nbsp;
+            <form action="__SELF__" method="post" name="form1">
+                <!--<?php $arr = C('locker_type'); ?>-->
+                <label><input type="radio" name="locker_type" value=""
+                              onclick="document.form1.submit()"/> 全部</label>
+                <!--<foreach name="arr" item="vo" key="k">-->
+                <!--<label><input type="radio" name="locker_type" value="{$vo}"-->
+                <!--<eq name="locker_type" value="$vo">checked</eq>-->
+                <!--onclick="document.form1.submit()" /> {$vo}</label>-->
+                <!--</foreach>-->
+            </form>
+        </div>
+
+        <div class="block-tab">
+
+            <table class="table-mins">
+                <tr>
+                    <th width="10"></th>
+                    <th width="10"><input type="checkbox"
+                                          onclick="checkAll(this)"/></th>
+                    <th>储物柜类型</th>
+                    <th>储物柜编号</th>
+                    <th>使用状态</th>
+                    <th>储物柜状态</th>
+                    <th>电源状态</th>
+                    <th>操作</th>
+                    <!-- <th>历史记录</th> -->
+                </tr>
+                <tr th:each="vo,iterStat:${lockers}"
+                    th:id="${vo.id }"
+                    class="row-color">
+                    <td>xxx</td>
+                    <td><input type="checkbox" name="chk" id="chk"></td>
+                    <td th:text="${vo.type}"></td>
+                    <td th:text="${vo.lockerNo}"></td>
+                    <td th:text="${vo.useStatus}"></td>
+                    <td th:text="${vo.status}">
+                    </td>
+
+                    <td>
+                        <a href="#" class="btn btnL Bbtn-success">控制</a>
+                    </td>
+                    <td>
+                        <a href="#">编辑</a>
+                    </td>
+
+                </tr>
+
+            </table>
+
+
+        </div>
+        <div class="block-foot">
+            <div class="pagination">
+                <!-- <a href="#">首页</a>
+                <a href="#">上一页</a>
+                <a href="#">1</a>
+                <a href="#">2</a>
+                <a href="#">3</a>
+                <a href="#">4</a>
+                <a href="#">下一页</a>
+                <a href="#">末页</a> -->
+                13
+            </div>
+        </div>
+
+    </div>
+</div>
+</html>
+
+
