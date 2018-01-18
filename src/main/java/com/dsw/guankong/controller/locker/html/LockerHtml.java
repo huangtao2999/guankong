@@ -25,8 +25,8 @@ public class LockerHtml {
 
     @RequestMapping("index")
     public String index(Model model) {
-        List<TpLockerDo> lockers = lockerService.queryLocker();
-        model.addAttribute("lockers", lockers);
+//        List<TpLockerDo> lockers = lockerService.queryLocker();
+//        model.addAttribute("lockers", lockers);
         return "/locker/index";
     }
 }

@@ -10,82 +10,135 @@
     <ul class="breadcrumb">
         <li class="active">储物柜管理</li>
     </ul>
-
     <div class="container-fluid">
-
+        <div class="layui-form btn-toolbar">
+            储物柜编号：<input type="text" id="lockerNo" class="input-medium"
+                         name="lockerNo">&nbsp;
+            <button class="layui-btn layui-btn-warm" id="chax"
+                    data-type="reload"><img
+                    th:src="@{../../images/icon/query.png}"/> 查询
+            </button>
+        </div>
         <div class="btn-toolbar">
-    <span class="pull-right">
-    <a href="javascript:doAC('__URL__/delete','确定删除吗？')" class="btn btn-danger">删除</a>
-    </span>
-            <a href="__URL__/lockerUI.html" class="btn btn-success"><img
-                    th:src="@{../../images/icon/plus.png}"/> 新增</a> &nbsp;&nbsp;
-            <form action="__SELF__" method="post" name="form1">
-                <!--<?php $arr = C('locker_type'); ?>-->
-                <label><input type="radio" name="locker_type" value=""
-                              onclick="document.form1.submit()"/> 全部</label>
-                <!--<foreach name="arr" item="vo" key="k">-->
-                <!--<label><input type="radio" name="locker_type" value="{$vo}"-->
-                <!--<eq name="locker_type" value="$vo">checked</eq>-->
-                <!--onclick="document.form1.submit()" /> {$vo}</label>-->
-                <!--</foreach>-->
-            </form>
+                <span class="pull-left">
+                     <a class="btn btn-success" id="add"><imgn
+                             th:src="@{../../images/icon/plus.png}"/> 新增</a> &nbsp;&nbsp;
+                </span>
+            <span class="pull-left">
+                    <a class="btn btn-danger">删除</a>
+                </span>
         </div>
-
-        <div class="block-tab">
-
-            <table class="table-mins">
-                <tr>
-                    <th width="10"></th>
-                    <th width="10"><input type="checkbox"
-                                          onclick="checkAll(this)"/></th>
-                    <th>储物柜类型</th>
-                    <th>储物柜编号</th>
-                    <th>使用状态</th>
-                    <th>储物柜状态</th>
-                    <th>电源状态</th>
-                    <th>操作</th>
-                    <!-- <th>历史记录</th> -->
-                </tr>
-                <tr th:each="vo,iterStat:${lockers}"
-                    th:id="${vo.id }"
-                    class="row-color">
-                    <td>xxx</td>
-                    <td><input type="checkbox" name="chk" id="chk"></td>
-                    <td th:text="${vo.type}"></td>
-                    <td th:text="${vo.lockerNo}"></td>
-                    <td th:text="${vo.useStatus}"></td>
-                    <td th:text="${vo.status}">
-                    </td>
-
-                    <td>
-                        <a href="#" class="btn btnL Bbtn-success">控制</a>
-                    </td>
-                    <td>
-                        <a href="#">编辑</a>
-                    </td>
-
-                </tr>
-
-            </table>
-
-
-        </div>
-        <div class="block-foot">
-            <div class="pagination">
-                <!-- <a href="#">首页</a>
-                <a href="#">上一页</a>
-                <a href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <a href="#">4</a>
-                <a href="#">下一页</a>
-                <a href="#">末页</a> -->
-                13
-            </div>
-        </div>
-
+        <table class="table-mins" id="demo" lay-filter="test"></table>
     </div>
 </div>
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+        //table内容渲染
+        table.render({
+                         elem: '#demo',
+                         url: '/Locker/queryPage.json',
+                         cols:
+                             [[
+                                 {type: 'checkbox'},
+                                 {type: 'numbers'},
+                                 {
+                                     field: 'type',
+                                     width: 100,
+                                     align: 'center',
+                                     title: '类型'
+                                 },
+                                 {
+                                     field: 'lockerNo',
+                                     width: 150,
+                                     align: 'center',
+                                     title: '编号',
+                                     sort: true
+                                 },
+                                 {
+                                     field: 'useStatus',
+                                     width: 100,
+                                     align: 'center',
+                                     title: '使用状态'
+                                 },
+                                 {
+                                     field: 'status',
+                                     width: 100,
+                                     align: 'center',
+                                     title: '状态'
+                                 },
+                                 {
+                                     field: 'lock_status',
+                                     width: 300,
+                                     title: '电源状态',
+                                     align: 'center',
+                                     toolbar: '#barDemo'
+                                 },
+                                 {
+                                     fixed: 'right',
+                                     width: 320,
+                                     align: 'center',
+                                     toolbar: '#optioins'
+                                 }
+                             ]],
+                         limits: [5, 10, 20],
+                         page:
+                             true
+                     });
+        //操作列方法绑定
+        table.on('tool(test)', function (obj) {
+            var data = obj.data;
+            var event = obj.event;
+            alert(data.lockerStatus);
+            alert(event);
+        });
+
+        $('#chax').on('click', function () {
+            table.reload('demo', {
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+                , where: {
+                    lockerNo: $('#lockerNo').val()
+                }
+            });
+        });
+
+    });
+    layui.use('layer', function () {
+        var layer = layui.layer;
+        $('#add').on('click', function () {
+            layer.open({
+                           type: 2,
+                           title: '弹出窗口Demo',
+                           shadeClose: true,
+                           area: ['1000px', '560px'],
+                           content: 'http://www.baidu.com'
+                       });
+        });
+    });
+</script>
+
+<script type="text/html" id="barDemo">
+    {{#  if(d.lockerStatus == '1'){}}
+    <a href="#" class="btn btnLB btn-success" lay-event="入所柜门控制">入所柜门控制</a>
+    {{#  } else { }}
+    <a href="#" class="btn btnLB" lay-event="入所柜门控制">入所柜门控制</a>
+    {{#   }}}
+
+    {{#  if(d.outLockerStatus == '1'){}}
+    <a href="#" class="btn btnRB btn-success" lay-event="出所柜门控制">出所柜门控制</a>
+    {{#  } else { }}
+    <a href="#" class="btn btnRB" lay-event="出所柜门控制">出所柜门控制</a>
+    {{#   }}}
+</script>
+<script type="text/html" id="optioins">
+    <a class="layui-btn layui-btn-primary layui-btn-xs"
+       lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
 </html>
 
 

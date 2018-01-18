@@ -1,6 +1,8 @@
 package com.dsw.guankong.sys;
 
 import com.dsw.guankong.util.ActionResult;
+import com.dsw.guankong.util.PageResult;
+
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
@@ -18,13 +20,17 @@ public class DataResponseBodyAdvice implements ResponseBodyAdvice {
     public boolean supports(MethodParameter returnType, Class converterType) {
         return true;
     }
+
     @Override
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType, ServerHttpRequest request, ServerHttpResponse response) {
 
-        if(body instanceof ActionResult){
+        if (body instanceof ActionResult) {
             //按标准格式返回的不处理
             return body;
-        }else{
+        } else if (body instanceof PageResult) {
+            //分页对象不处理
+            return body;
+        } else {
             ActionResult actionResult = new ActionResult();
             actionResult.setContent(body);
             return actionResult;
