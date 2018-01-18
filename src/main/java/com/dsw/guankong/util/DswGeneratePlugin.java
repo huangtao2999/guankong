@@ -1,17 +1,22 @@
 package com.dsw.guankong.util;
 
+import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.ShellRunner;
+import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.Interface;
 import org.mybatis.generator.api.dom.java.JavaVisibility;
+import org.mybatis.generator.api.dom.java.Method;
+import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.Document;
 import org.mybatis.generator.api.dom.xml.Element;
+import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.api.dom.java.CompilationUnit;
 import org.mybatis.generator.config.PropertyRegistry;
@@ -37,6 +42,7 @@ public class DswGeneratePlugin extends PluginAdapter {
     private static final String JAVAFILE_POTFIX = "Ext";
     private static String XMLFILE_POSTFIX = "Ext";
     private static String ANNOTATION_RESOURCE = "javax.annotation.Resource";
+    private static String FULLY_QUALIFIED_PAGE = "com.dsw.guankong.util.Page";
 
 
     @Override
@@ -110,11 +116,29 @@ public class DswGeneratePlugin extends PluginAdapter {
     }
 
     @Override
+    public boolean modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        addPage(topLevelClass, introspectedTable, "page");
+        return super.modelExampleClassGenerated(topLevelClass, introspectedTable);
+    }
+
+    @Override
     public boolean sqlMapDocumentGenerated(Document document, IntrospectedTable introspectedTable) {
         XmlElement rootElement = document.getRootElement();
         updateDocumentNameSpace(introspectedTable, rootElement);
         return super.sqlMapDocumentGenerated(document, introspectedTable);
     }
+
+    // selectByExample
+    @Override
+    public boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(XmlElement element,
+                                                                     IntrospectedTable introspectedTable) {
+        XmlElement limitPageElement = new XmlElement("if");
+        limitPageElement.addAttribute(new Attribute("test", "page != null"));
+        limitPageElement.addElement(new TextElement("limit ${page.offset},${page.pageSize}"));
+        element.addElement(limitPageElement);
+        return super.sqlMapSelectByExampleWithoutBLOBsElementGenerated(element, introspectedTable);
+    }
+
 
     private void updateDocumentNameSpace(IntrospectedTable introspectedTable, XmlElement parentElement) {
         Attribute namespaceAttribute = null;
@@ -126,6 +150,36 @@ public class DswGeneratePlugin extends PluginAdapter {
         parentElement.getAttributes().remove(namespaceAttribute);
         parentElement.getAttributes().add(new Attribute("namespace", introspectedTable.getMyBatis3JavaMapperType()
                 + JAVAFILE_POTFIX));
+    }
+
+    /**
+     * 在XXExample对象里添加Page对象属性
+     */
+    private void addPage(TopLevelClass topLevelClass, IntrospectedTable introspectedTable, String name) {
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(FULLY_QUALIFIED_PAGE));
+        CommentGenerator commentGenerator = context.getCommentGenerator();
+        Field field = new Field();
+        field.setVisibility(JavaVisibility.PROTECTED);
+        field.setType(new FullyQualifiedJavaType(FULLY_QUALIFIED_PAGE));
+        field.setName(name);
+        commentGenerator.addFieldComment(field, introspectedTable);
+        topLevelClass.addField(field);
+        char c = name.charAt(0);
+        String camel = Character.toUpperCase(c) + name.substring(1);
+        Method method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setName("set" + camel);
+        method.addParameter(new Parameter(new FullyQualifiedJavaType(FULLY_QUALIFIED_PAGE), name));
+        method.addBodyLine("this." + name + "=" + name + ";");
+        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        topLevelClass.addMethod(method);
+        method = new Method();
+        method.setVisibility(JavaVisibility.PUBLIC);
+        method.setReturnType(new FullyQualifiedJavaType(FULLY_QUALIFIED_PAGE));
+        method.setName("get" + camel);
+        method.addBodyLine("return " + name + ";");
+        commentGenerator.addGeneralMethodComment(method, introspectedTable);
+        topLevelClass.addMethod(method);
     }
 
     private boolean isExistExtFile(String targetProject, String targetPackage, String fileName) {
