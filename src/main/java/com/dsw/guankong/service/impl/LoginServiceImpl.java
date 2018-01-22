@@ -8,6 +8,8 @@ import com.dsw.guankong.model.TpUserDoExample;
 import com.dsw.guankong.service.LoginService;
 import com.dsw.guankong.util.*;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +46,7 @@ public class LoginServiceImpl implements LoginService {
         json.put("Time", time);
         String sign = MD5Util.MD5(FaduConfig.appKey + idValue + FaduConfig.appSecret + time);
         json.put("Sign", sign);
-        if (null != anInfo) {
+        if (StringUtils.isNotEmpty(anInfo)) {
             String fileName = sign + ".txt";
             String gxfileDir = fileUpload.saveRemote(anInfo, fileName);
             json.put("Tag", gxfileDir);
@@ -55,17 +57,18 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public TpUserDo login(String userName, String passWord, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        if (FuncComm.isEmpty(userName)) {
+        if (StringUtils.isEmpty(userName)) {
             throw new BizException("用户名为空!");
         }
-        if (FuncComm.isEmpty(passWord)) {
+        if (StringUtils.isEmpty(passWord)) {
             throw new BizException("密码为空!");
         }
+
         passWord = MD5Util.MD5(passWord);
         TpUserDoExample example = new TpUserDoExample();
         example.createCriteria().andUsernameEqualTo(userName).andPasswordEqualTo(passWord);
         List<TpUserDo> list = tpUserDoMapperExt.selectByExample(example);
-        if (FuncComm.isEmpty(list)) {
+        if (CollectionUtils.isEmpty(list)) {
             throw new BizException("用户名或密码错误!");
         }
         TpUserDo tpUserDo = list.get(0);

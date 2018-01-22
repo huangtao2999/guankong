@@ -10,6 +10,7 @@ import com.dsw.guankong.util.FuncComm;
 import com.dsw.guankong.util.Page;
 import com.dsw.guankong.util.PageResult;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +33,7 @@ public class LockerServiceImpl implements LockerService {
         TpLockerDoExample example = new TpLockerDoExample();
         TpLockerDoExample.Criteria criteria = example.createCriteria();
         //添加条件
-        if (!FuncComm.isEmpty(request.getLockerNo())) {
+        if (StringUtils.isNotEmpty(request.getLockerNo())) {
             criteria.andLockerNoLike("%" + request.getLockerNo() + "%");
         }
         int count = tpLockerDoMapperExt.countByExample(example);
