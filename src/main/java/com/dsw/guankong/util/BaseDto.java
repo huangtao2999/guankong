@@ -9,7 +9,7 @@ import lombok.Data;
  * @create 2018-01-18 9:52
  **/
 @Data
-public class BaseRequest {
+public class BaseDto {
 
     private int page = 1;
     private int limit = 10;

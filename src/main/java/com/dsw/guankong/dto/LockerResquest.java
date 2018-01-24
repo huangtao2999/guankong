@@ -1,6 +1,6 @@
 package com.dsw.guankong.dto;
 
-import com.dsw.guankong.util.BaseRequest;
+import com.dsw.guankong.util.BaseDto;
 
 import lombok.Data;
 
@@ -11,7 +11,7 @@ import lombok.Data;
  * @create 2018-01-18 9:49
  **/
 @Data
-public class LockerResquest extends BaseRequest {
+public class LockerResquest extends BaseDto {
 
     private String lockerNo;
 }

@@ -43,6 +43,7 @@ public class DswGeneratePlugin extends PluginAdapter {
     private static String XMLFILE_POSTFIX = "Ext";
     private static String ANNOTATION_RESOURCE = "javax.annotation.Resource";
     private static String FULLY_QUALIFIED_PAGE = "com.dsw.guankong.util.Page";
+    private static String SQLMAP_COMMON_POTFIX = "and is_deleted = 'n'";
 
 
     @Override
@@ -132,11 +133,58 @@ public class DswGeneratePlugin extends PluginAdapter {
     @Override
     public boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(XmlElement element,
                                                                      IntrospectedTable introspectedTable) {
+
+        XmlElement isdeletedElement = new XmlElement("if");
+        isdeletedElement.addAttribute(new Attribute("test", "oredCriteria.size != 0"));
+        isdeletedElement.addElement(new TextElement(SQLMAP_COMMON_POTFIX));
+        element.addElement(isdeletedElement);
+        isdeletedElement = new XmlElement("if");
+        isdeletedElement.addAttribute(new Attribute("test", "oredCriteria.size == 0"));
+        isdeletedElement.addElement(new TextElement("where is_deleted = 'n'"));
+        element.addElement(isdeletedElement);
+
         XmlElement limitPageElement = new XmlElement("if");
         limitPageElement.addAttribute(new Attribute("test", "page != null"));
         limitPageElement.addElement(new TextElement("limit ${page.offset},${page.pageSize}"));
         element.addElement(limitPageElement);
         return super.sqlMapSelectByExampleWithoutBLOBsElementGenerated(element, introspectedTable);
+    }
+
+    @Override
+    public boolean sqlMapCountByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        XmlElement isNotNullElement = new XmlElement("if");
+        isNotNullElement.addAttribute(new Attribute("test", "oredCriteria.size != 0"));
+        isNotNullElement.addElement(new TextElement(SQLMAP_COMMON_POTFIX));
+        element.addElement(isNotNullElement);
+        isNotNullElement = new XmlElement("if");
+        isNotNullElement.addAttribute(new Attribute("test", "oredCriteria.size == 0"));
+        isNotNullElement.addElement(new TextElement("where is_deleted = 'n'"));
+        element.addElement(isNotNullElement);
+        return super.sqlMapCountByExampleElementGenerated(element, introspectedTable);
+    }
+
+    @Override
+    public boolean sqlMapSelectByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        TextElement text = new TextElement(SQLMAP_COMMON_POTFIX);
+        element.addElement(text);
+        return super.sqlMapSelectByPrimaryKeyElementGenerated(element, introspectedTable);
+    }
+
+    // updateByPrimaryKeySelective
+    @Override
+    public boolean sqlMapUpdateByPrimaryKeySelectiveElementGenerated(XmlElement element,
+                                                                     IntrospectedTable introspectedTable) {
+        TextElement text = new TextElement(SQLMAP_COMMON_POTFIX);
+        element.addElement(text);
+        return super.sqlMapUpdateByPrimaryKeySelectiveElementGenerated(element, introspectedTable);
+    }
+
+    @Override
+    public boolean sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(XmlElement element,
+                                                                        IntrospectedTable introspectedTable) {
+        TextElement text = new TextElement(SQLMAP_COMMON_POTFIX);
+        element.addElement(text);
+        return super.sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(element, introspectedTable);
     }
 
 
