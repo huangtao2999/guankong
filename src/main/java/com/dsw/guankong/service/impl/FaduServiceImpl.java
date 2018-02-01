@@ -152,8 +152,8 @@ public class FaduServiceImpl implements FaduService {
         String blHtml = HttpClientUtil.post(FADU_URL + FaduConfig.method_queryBiluByBiluID, params);
         if (null != blHtml) {
             JSONObject jsonObject = JSONObject.parseObject(blHtml);
-            if (0 == jsonObject.getIntValue("resultCode")) {
-                JSONObject blObj = jsonObject.getJSONObject("data");
+            JSONObject blObj = jsonObject.getJSONObject("data");
+            if (0 == jsonObject.getIntValue("resultCode") && null != blObj) {
                 String kssj = blObj.getString("KSSJ");
                 String jssj = blObj.getString("JSSJ");
                 String blid = blObj.getString("id");

@@ -1,5 +1,6 @@
 package com.dsw.guankong.sys;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dsw.guankong.util.ActionResult;
 import com.dsw.guankong.util.BizException;
 
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 import java.text.MessageFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 集中异常处理类
@@ -24,7 +27,7 @@ public class BizExceptionHandler {
     @ExceptionHandler(value = BizException.class)
     @ResponseBody
     public Object bizExceptionHandler(HttpServletRequest req, Exception e) throws Exception {
-        logger.error(MessageFormat.format("---BizException Handler---Host {0} invokes url {1} params{2}", req.getRemoteHost(), req.getRequestURL(), req.getParameterMap()));
+        logger.error(MessageFormat.format("---BizException Handler---Host {0} invokes url {1} params{2}", req.getRemoteHost(), req.getRequestURL(), JSONObject.toJSONString(req.getParameterMap())));
         ActionResult actionResult = new ActionResult();
         actionResult.setSuccess(false);
         actionResult.setErrorMsg(e.getMessage());
@@ -34,7 +37,7 @@ public class BizExceptionHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public Object exceptionHandler(HttpServletRequest req, Exception e) throws Exception {
-        logger.error(MessageFormat.format("---Exception Handler---Host {0} invokes url {1} ERROR: {2} params{3}", req.getRemoteHost(), req.getRequestURL(), e.getMessage(), req.getParameterMap()), e);
+        logger.error(MessageFormat.format("---Exception Handler---Host {0} invokes url {1} ERROR: {2} params{3}", req.getRemoteHost(), req.getRequestURL(), e.getMessage(), JSONObject.toJSONString(req.getParameterMap())), e);
         ActionResult actionResult = new ActionResult();
         actionResult.setSuccess(false);
         actionResult.setErrorCode("00000");

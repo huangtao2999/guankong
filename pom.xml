@@ -6,7 +6,7 @@
 
     <groupId>com.dsw</groupId>
     <artifactId>guankong</artifactId>
-    <version>0.0.0116-SNAPSHOT</version>
+    <version>0.0.0201-SNAPSHOT</version>
     <packaging>jar</packaging>
     <!--<packaging>war</packaging>-->
 
